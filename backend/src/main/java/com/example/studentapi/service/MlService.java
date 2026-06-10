@@ -13,7 +13,7 @@ public class MlService {
 
     public String predict(StudentMarks marks) {
 
-        String url = "http://localhost:5000/predict";
+        String url = "https://student-management-ai-production.up.railway.app/predict";
 
         return restTemplate.postForObject(
                 url,
