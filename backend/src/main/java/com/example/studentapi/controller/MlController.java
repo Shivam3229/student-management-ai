@@ -1,5 +1,6 @@
 package com.example.studentapi.controller;
 
+import org.springframework.http.ResponseEntity;
 import com.example.studentapi.dto.StudentMarks;
 import com.example.studentapi.service.MlService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +14,10 @@ public class MlController {
     private MlService mlService;
 
     @PostMapping("/predict")
-    public String predict(
+    public ResponseEntity<String> predict(
             @RequestBody StudentMarks marks) {
 
-        return mlService.predict(marks);
+        return ResponseEntity.ok(
+                mlService.predict(marks));
     }
 }

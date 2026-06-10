@@ -1,34 +1,229 @@
 <!DOCTYPE html>
+
 <html>
 <head>
-    <title>Student Dashboard</title>
+    <title>Student Management AI Dashboard</title>
+    <style>
+        body{
+    font-family: 'Segoe UI', sans-serif;
+    background:#f4f7fc;
+    margin:0;
+    padding:30px;
+}
+
+h1{
+    text-align:center;
+    color:#2c3e50;
+}
+
+.container{
+    max-width:1200px;
+    margin:auto;
+}
+
+.card{
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    margin-bottom:20px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.1);
+}
+
+.stats{
+    display:flex;
+    gap:20px;
+    margin-bottom:20px;
+}
+
+.stat-card{
+    flex:1;
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    text-align:center;
+    box-shadow:0 4px 12px rgba(0,0,0,0.1);
+}
+
+.stat-card h2{
+    margin:0;
+    color:#3498db;
+}
+
+input{
+    padding:12px;
+    margin:8px;
+    border:1px solid #ddd;
+    border-radius:8px;
+}
+
+button{
+    background:#3498db;
+    color:white;
+    border:none;
+    padding:12px 18px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#2980b9;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th{
+    background:#3498db;
+    color:white;
+}
+
+th,td{
+    padding:12px;
+    border-bottom:1px solid #ddd;
+}
+    </style>
 </head>
 <body>
+<body>
 
-<h1>Student Dashboard</h1>
+<div style="
+background:#2c3e50;
+color:white;
+padding:20px;
+border-radius:12px;
+margin-bottom:20px;
+">
 
-<table border="1">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Semester</th>
-    </tr>
-    </thead>
+    <h2>🎓 Student Management AI System</h2>
 
-    <tbody id="studentsTable"></tbody>
-</table>
+    <p>Spring Boot • MySQL • Python ML • Railway</p>
+
+</div>
+
+<h1>Student Management AI Dashboard</h1>
+
+<div class="stats">
+
+    <div class="stat-card">
+        <h2 id="studentCount">0</h2>
+        <p>Total Students</p>
+    </div>
+
+    <div class="stat-card">
+        <h2 id="topStudent">-</h2>
+        <p>Top Student</p>
+    </div>
+
+</div>
+
+<div class="card">
+
+    <h2>Add Student</h2>
+
+    <input id="name" placeholder="Name">
+    <input id="rollNumber" placeholder="Roll Number">
+    <input id="email" placeholder="Email">
+    <input id="semester" placeholder="Semester">
+
+    <button onclick="addStudent()">
+        Add Student
+    </button>
+
+</div>
+
+<div class="card">
+
+    <h2>Students</h2>
+
+    <table>
+
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Roll Number</th>
+            <th>Email</th>
+            <th>Semester</th>
+        </tr>
+        </thead>
+
+        <tbody id="studentsTable"></tbody>
+
+    </table>
+
+</div>
+
+<div class="card">
+
+    <h2>Rankings</h2>
+
+    <button onclick="loadRankings()">
+        Load Rankings
+    </button>
+
+    <ul id="rankings"></ul>
+
+</div>
+
+<div class="card">
+
+    <h2>AI Pass/Fail Prediction</h2>
+
+    <input id="math" placeholder="Math">
+    <input id="science" placeholder="Science">
+    <input id="english" placeholder="English">
+
+    <button onclick="predict()">
+        Predict
+    </button>
+
+    <div id="predictionResult"
+         style="
+            margin-top:15px;
+            padding:15px;
+            border-radius:10px;
+            font-weight:bold;
+            font-size:18px;
+         ">
+    </div>
+
+</div>
 
 <script>
 
-    fetch('/students')
+    loadStudents();
+    loadTopStudent();
+
+    function loadStudents(){
+
+        fetch('/students')
         .then(response => response.json())
         .then(data => {
+
+            document.getElementById(
+                'studentCount').innerText =
+                data.length;
 
             let table =
                 document.getElementById(
                     'studentsTable');
+
+            table.innerHTML = "";
+
+            if(data.length === 0){
+
+                table.innerHTML = `
+                    <tr>
+                        <td colspan="5">
+                            No students found
+                        </td>
+                    </tr>
+                `;
+
+                return;
+            }
 
             data.forEach(student => {
 
@@ -36,14 +231,166 @@
                 <tr>
                     <td>${student.id}</td>
                     <td>${student.name}</td>
+                    <td>${student.rollNumber}</td>
                     <td>${student.email}</td>
                     <td>${student.semester}</td>
                 </tr>`;
             });
 
         });
+    }
+
+    function loadTopStudent(){
+
+        fetch('/students/rankings')
+        .then(response => response.json())
+        .then(data => {
+
+            if(data.length > 0){
+
+                document.getElementById(
+                    'topStudent').innerText =
+                    data[0].studentName;
+            }
+        });
+    }
+
+    function addStudent(){
+
+        fetch('/students',{
+
+            method:'POST',
+
+            headers:{
+                'Content-Type':'application/json'
+            },
+
+            body:JSON.stringify({
+
+                name:
+                    document.getElementById('name').value,
+
+                rollNumber:
+                    document.getElementById('rollNumber').value,
+
+                email:
+                    document.getElementById('email').value,
+
+                semester:
+                    parseInt(
+                        document.getElementById(
+                            'semester').value)
+
+            })
+
+        })
+        .then(() => {
+
+            loadStudents();
+
+            document.getElementById('name').value = "";
+            document.getElementById('rollNumber').value = "";
+            document.getElementById('email').value = "";
+            document.getElementById('semester').value = "";
+
+        });
+
+    }
+
+    function loadRankings(){
+
+        fetch('/students/rankings')
+        .then(response => response.json())
+        .then(data => {
+
+            let rankings =
+                document.getElementById(
+                    'rankings');
+
+            rankings.innerHTML = "";
+
+            data.forEach(student => {
+
+                rankings.innerHTML +=
+                    `<li>
+                        🏆 ${student.studentName}
+                        - ${student.percentage.toFixed(2)}%
+                     </li>`;
+            });
+
+        });
+
+    }
+
+    function predict(){
+
+        fetch('/ml/predict',{
+
+            method:'POST',
+
+            headers:{
+                'Content-Type':'application/json'
+            },
+
+            body:JSON.stringify({
+
+                math:
+                    parseInt(
+                        document.getElementById(
+                            'math').value),
+
+                science:
+                    parseInt(
+                        document.getElementById(
+                            'science').value),
+
+                english:
+                    parseInt(
+                        document.getElementById(
+                            'english').value)
+
+            })
+
+        })
+        .then(response => response.json())
+        .then(data => {
+
+            let result =
+                document.getElementById(
+                    'predictionResult');
+
+            if(data.prediction == 1){
+
+                result.style.background =
+                    "#d4edda";
+
+                result.style.color =
+                    "#155724";
+
+                result.innerHTML =
+                    `✅ PASS<br>
+                     Confidence: ${data.confidence}`;
+            }
+            else{
+
+                result.style.background =
+                    "#f8d7da";
+
+                result.style.color =
+                    "#721c24";
+
+                result.innerHTML =
+                    `❌ FAIL<br>
+                     Confidence: ${data.confidence}`;
+            }
+
+        });
+
+    }
 
 </script>
+
+</body>
 
 </body>
 </html>
