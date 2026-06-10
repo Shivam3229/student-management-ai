@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Dashboard</title>
+</head>
+<body>
+
+<h1>Student Dashboard</h1>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Semester</th>
+    </tr>
+    </thead>
+
+    <tbody id="studentsTable"></tbody>
+</table>
+
+<script>
+
+    fetch('/students')
+        .then(response => response.json())
+        .then(data => {
+
+            let table =
+                document.getElementById(
+                    'studentsTable');
+
+            data.forEach(student => {
+
+                table.innerHTML += `
+                <tr>
+                    <td>${student.id}</td>
+                    <td>${student.name}</td>
+                    <td>${student.email}</td>
+                    <td>${student.semester}</td>
+                </tr>`;
+            });
+
+        });
+
+</script>
+
+</body>
+</html>
