@@ -167,12 +167,6 @@ http://localhost:8080
 ### Dashboard
 ![Dashboard](screenshots/dashboard.png)
 
-### Student List
-![Student List](screenshots/students.png)
-
-### Rankings
-![Rankings](screenshots/rankings.png)
-
 ### AI Prediction
 ![AI Prediction](screenshots/prediction.png)
 
