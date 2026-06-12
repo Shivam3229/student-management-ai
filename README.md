@@ -162,6 +162,19 @@ http://localhost:8080
 * Docker Support
 * CI/CD Pipeline
 * More Advanced ML Models
+  ## 📸 Screenshots
+
+### Dashboard
+![Dashboard](screenshots/dashboard.png)
+
+### Student List
+![Student List](screenshots/students.png)
+
+### Rankings
+![Rankings](screenshots/rankings.png)
+
+### AI Prediction
+![AI Prediction](screenshots/prediction.png)
 
 ## 👨‍💻 Author
 
