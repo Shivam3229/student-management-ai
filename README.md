@@ -123,7 +123,7 @@ Example Response:
 ### Clone the repository
 
 ```bash
-git clone https://github.com/YOUR_GITHUB_USERNAME/student-management-ai.git
+git clone https://github.com/Shivam3229/student-management-ai.git
 ```
 
 ### Start the Spring Boot backend
